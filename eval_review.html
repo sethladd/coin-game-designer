@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eval Set Review - coin-game-designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Lora', Georgia, serif; background: #faf9f5; padding: 2rem; color: #141413; }
+    h1 { font-family: 'Poppins', sans-serif; margin-bottom: 0.5rem; font-size: 1.5rem; }
+    .description { color: #b0aea5; margin-bottom: 1.5rem; font-style: italic; max-width: 900px; }
+    .controls { margin-bottom: 1rem; display: flex; gap: 0.5rem; }
+    .btn { font-family: 'Poppins', sans-serif; padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.875rem; font-weight: 500; }
+    .btn-add { background: #6a9bcc; color: white; }
+    .btn-add:hover { background: #5889b8; }
+    .btn-export { background: #d97757; color: white; }
+    .btn-export:hover { background: #c4613f; }
+    table { width: 100%; max-width: 1100px; border-collapse: collapse; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    th { font-family: 'Poppins', sans-serif; background: #141413; color: #faf9f5; padding: 0.75rem 1rem; text-align: left; font-size: 0.875rem; }
+    td { padding: 0.75rem 1rem; border-bottom: 1px solid #e8e6dc; vertical-align: top; }
+    tr:nth-child(even) td { background: #faf9f5; }
+    tr:hover td { background: #f3f1ea; }
+    .section-header td { background: #e8e6dc; font-family: 'Poppins', sans-serif; font-weight: 500; font-size: 0.8rem; color: #141413; text-transform: uppercase; letter-spacing: 0.05em; }
+    .query-input { width: 100%; padding: 0.4rem; border: 1px solid #e8e6dc; border-radius: 4px; font-size: 0.875rem; font-family: 'Lora', Georgia, serif; resize: vertical; min-height: 60px; }
+    .query-input:focus { outline: none; border-color: #d97757; box-shadow: 0 0 0 2px rgba(217,119,87,0.15); }
+    .toggle { position: relative; display: inline-block; width: 44px; height: 24px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle .slider { position: absolute; inset: 0; background: #b0aea5; border-radius: 24px; cursor: pointer; transition: 0.2s; }
+    .toggle .slider::before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.2s; }
+    .toggle input:checked + .slider { background: #d97757; }
+    .toggle input:checked + .slider::before { transform: translateX(20px); }
+    .btn-delete { background: #c44; color: white; padding: 0.3rem 0.6rem; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-family: 'Poppins', sans-serif; }
+    .btn-delete:hover { background: #a33; }
+    .summary { margin-top: 1rem; color: #b0aea5; font-size: 0.875rem; }
+  </style>
+</head>
+<body>
+  <h1>Eval Set Review: <span id="skill-name">coin-game-designer</span></h1>
+  <p class="description">Current description: <span id="skill-desc">Design COIN (Counter-Insurgency) and ICS (Irregular Conflict Series) board games with deep knowledge of the system's conventions: eligibility tracks, operations and special activities, event cards, propaganda/winter rounds, faction archetypes, and victory conditions. Use this skill whenever the user wants to design a COIN-style game, create factions for an irregular warfare game, develop event decks for asymmetric conflict simulations, or adapt a historical conflict into the COIN/ICS framework. Also trigger when the user mentions COIN series, GMT Games COIN, Volko Ruhnke, irregular conflict simulation, counterinsurgency game design, or wants to create an asymmetric wargame with an eligibility-based turn structure. Even if the user just names a historical insurgency or irregular conflict and asks for a game design, this skill is likely the right fit.</span></p>
+
+  <div class="controls">
+    <button class="btn btn-add" onclick="addRow()">+ Add Query</button>
+    <button class="btn btn-export" onclick="exportEvalSet()">Export Eval Set</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:65%">Query</th>
+        <th style="width:18%">Should Trigger</th>
+        <th style="width:10%">Actions</th>
+      </tr>
+    </thead>
+    <tbody id="eval-body"></tbody>
+  </table>
+
+  <p class="summary" id="summary"></p>
+
+  <script>
+    const EVAL_DATA = [{"query":"I've been reading a lot about the Colombian drug wars and I think there's a really interesting COIN game in there \u2014 something like Andean Abyss but focused on the Cali and Medellin cartels in the 80s rather than FARC. Can you help me design the factions and figure out how the event deck would work?","should_trigger":true},{"query":"hey so i want to make an asymmetric wargame about the Mau Mau uprising in Kenya in the 1950s. i'm thinking 4 factions: british colonial government, mau mau fighters, loyalist kikuyu, and white settlers. it should have the kind of turn structure where not everyone gets to act every round and there's event cards that drive the narrative","should_trigger":true},{"query":"I'm designing an ICS game set during the French Wars of Religion (1562-1598). Three factions: Catholics, Huguenots, and the Politiques (moderate royalists). I want to use the People Power 3-player sequence where all factions act every turn. Can you help me figure out the operations and special activities for each faction?","should_trigger":true},{"query":"can you design a 2-player counterinsurgency game about the Malayan Emergency? something streamlined like Colonial Twilight with an initiative track. the british need to win hearts and minds while the communist guerrillas hide in the jungle. i want underground/active piece states for the guerrillas","should_trigger":true},{"query":"I'm working on a board game about the Syrian Civil War and I want it to feel like Fire in the Lake \u2014 multiple factions with completely different goals, an eligibility system, propaganda rounds where you check victory. The factions would be Assad regime, FSA rebels, ISIS, and Kurdish forces. How should the event deck be structured?","should_trigger":true},{"query":"What would a COIN-style game about the Troubles in Northern Ireland look like? Not sure if it should be 2 or 4 players. I know there's already a game called \"Troubles\" but I want to explore a different faction breakdown \u2014 maybe including Sinn Fein as a separate nonviolent political faction like Gandhi did with the Indian independence movement.","should_trigger":true},{"query":"I want to make a game about urban gentrification using COIN mechanics \u2014 like Cross Bronx Expressway but set in modern San Francisco. Three stakeholders: tech companies, longtime residents, and city government. Each has different victory conditions and the \"population\" is neighborhoods that shift between support and opposition. Is this doable with the COIN framework?","should_trigger":true},{"query":"I've been prototyping a Volko Ruhnke-style game about the Boer War and I'm stuck on the propaganda round resource generation formulas. The British faction generates resources from controlled railway LOCs but I can't get the numbers to balance \u2014 they either have way too many resources or not enough. My current formula is 1 resource per LOC + 2 per city with Active Support. Can you help me tune this?","should_trigger":true},{"query":"i need to design event cards for my COIN game about the Chechen Wars. i have 48 cards planned across 4 deck segments with coup cards shuffled in. i've written 12 so far but i'm struggling with making the unshaded/shaded text feel like genuine forks in the road rather than just 'good for russia' vs 'good for chechens'. can you look at what i have and help me write better dual-text events?","should_trigger":true},{"query":"I want to adapt the concept of hidden movement from A Gest of Robin Hood into a game about prohibition-era Chicago. Two players: the Bureau of Prohibition (trying to find and shut down speakeasies) vs Al Capone's organization (hiding operations among legitimate businesses). Should use COIN-style eligibility where acting aggressively costs you initiative.","should_trigger":true},{"query":"I'm designing a worker placement game about building medieval castles. Players compete to gather stone, timber, and hire craftsmen. There's an auction mechanic for rare materials. Can you help me balance the resource conversion rates? Right now stone feels too cheap compared to timber.","should_trigger":false},{"query":"can you write a professional rulebook for my card game? it's a trick-taking game for 3-5 players where suits have different powers. i have all the rules figured out, i just need them written clearly with examples and diagrams. the game is called Tempest and it's about weather wizards.","should_trigger":false},{"query":"I have the rules PDF for Twilight Imperium 4th edition and I think there's a broken interaction between the warfare strategy card and the space dock production limit. Can you analyze the rules and tell me if this is actually exploitable or if I'm missing something?","should_trigger":false},{"query":"Help me design an asymmetric board game like Root where woodland creatures compete for control of a forest. I want 4 factions with completely different playstyles \u2014 one builds, one fights, one explores, one trades. It should have a cute art style and be playable in 90 minutes.","should_trigger":false},{"query":"I'm writing a research paper on counterinsurgency doctrine in Afghanistan and I need to compare the COIN strategies used by NATO forces during ISAF with the Soviet approach in the 1980s. Can you help me outline the key doctrinal differences and find academic sources?","should_trigger":false},{"query":"design a hex-and-counter wargame about the Battle of Gettysburg. i want traditional wargame mechanics: combat results table, zone of control, supply lines, step losses. divisional scale, 1 hex = 500 yards. the map should cover from Seminary Ridge to Culp's Hill.","should_trigger":false},{"query":"I want to make a cooperative board game about a team of doctors fighting a pandemic. Players take different specialist roles (virologist, epidemiologist, surgeon) and need to coordinate to contain outbreaks across a world map before time runs out. Think Pandemic but with more realistic disease mechanics.","should_trigger":false},{"query":"I'm building a video game \u2014 a real-time strategy game inspired by counterinsurgency operations. The player commands a military force trying to stabilize a fictional country. I need help designing the AI behavior trees for the insurgent NPCs and the reputation/hearts-and-minds system. Using Unity and C#.","should_trigger":false},{"query":"Can you help me design a deck-building game about the Cold War? Players build decks representing their intelligence networks, playing spy cards to complete missions. It's competitive 1v1, kind of like Star Realms meets Twilight Struggle. I need help with the card economy and mission scoring.","should_trigger":false},{"query":"I need a board game about the American Revolution but I want it to be a lightweight family game \u2014 area majority with simple card play, plays in 45 minutes, ages 10+. NOT a wargame. Think Ticket to Ride complexity but set during the revolution. Players place influence cubes on a map of the colonies.","should_trigger":false}];
+
+    let evalItems = [...EVAL_DATA];
+
+    function render() {
+      const tbody = document.getElementById('eval-body');
+      tbody.innerHTML = '';
+
+      const sorted = evalItems
+        .map((item, origIdx) => ({ ...item, origIdx }))
+        .sort((a, b) => (b.should_trigger ? 1 : 0) - (a.should_trigger ? 1 : 0));
+
+      let lastGroup = null;
+      sorted.forEach(item => {
+        const group = item.should_trigger ? 'trigger' : 'no-trigger';
+        if (group !== lastGroup) {
+          const headerRow = document.createElement('tr');
+          headerRow.className = 'section-header';
+          headerRow.innerHTML = `<td colspan="3">${item.should_trigger ? 'Should Trigger' : 'Should NOT Trigger'}</td>`;
+          tbody.appendChild(headerRow);
+          lastGroup = group;
+        }
+
+        const idx = item.origIdx;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><textarea class="query-input" onchange="updateQuery(${idx}, this.value)">${escapeHtml(item.query)}</textarea></td>
+          <td>
+            <label class="toggle">
+              <input type="checkbox" ${item.should_trigger ? 'checked' : ''} onchange="updateTrigger(${idx}, this.checked)">
+              <span class="slider"></span>
+            </label>
+            <span style="margin-left:8px;font-size:0.8rem;color:#b0aea5">${item.should_trigger ? 'Yes' : 'No'}</span>
+          </td>
+          <td><button class="btn-delete" onclick="deleteRow(${idx})">Delete</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+      updateSummary();
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function updateQuery(idx, value) { evalItems[idx].query = value; updateSummary(); }
+    function updateTrigger(idx, value) { evalItems[idx].should_trigger = value; render(); }
+    function deleteRow(idx) { evalItems.splice(idx, 1); render(); }
+
+    function addRow() {
+      evalItems.push({ query: '', should_trigger: true });
+      render();
+      const inputs = document.querySelectorAll('.query-input');
+      inputs[inputs.length - 1].focus();
+    }
+
+    function updateSummary() {
+      const trigger = evalItems.filter(i => i.should_trigger).length;
+      const noTrigger = evalItems.filter(i => !i.should_trigger).length;
+      document.getElementById('summary').textContent =
+        `${evalItems.length} queries total: ${trigger} should trigger, ${noTrigger} should not trigger`;
+    }
+
+    function exportEvalSet() {
+      const valid = evalItems.filter(i => i.query.trim() !== '');
+      const data = valid.map(i => ({ query: i.query.trim(), should_trigger: i.should_trigger }));
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'eval_set.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    render();
+  </script>
+</body>
+</html>

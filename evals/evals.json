@@ -1,0 +1,23 @@
+{
+  "skill_name": "coin-game-designer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Design a 4-player COIN game about the Troubles in Northern Ireland, covering roughly 1969-1998.",
+      "expected_output": "A structured COIN game design document with 4 factions, operations, special activities, event card samples, map description, victory conditions, and propaganda round structure.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I want a 2-player COIN game about the Greek Civil War (1946-1949). Keep it streamlined for people new to COIN games.",
+      "expected_output": "A 2-player COIN design document with simplified eligibility, two factions, accessible mechanics, and clear onboarding considerations.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Can you design a COIN-style game about the Haitian Revolution? I'm interested in how the system handles a conflict with more than just two 'sides'.",
+      "expected_output": "A COIN design document that identifies 3-4 distinct factions in the Haitian Revolution, explains how the COIN framework models their relationships, and includes distinctive mechanics reflecting the unique nature of this conflict.",
+      "files": []
+    }
+  ]
+}
